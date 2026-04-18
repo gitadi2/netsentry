@@ -1,0 +1,585 @@
+/* ── NetSentry v2 — Pure Black MMAANGG Theme ──────────────────────────────── */
+:root {
+  --bg-0:     #000000;
+  --bg-1:     #040608;
+  --bg-2:     #080b12;
+  --bg-card:  #0a0e17;
+  --bg-card-2:#0d1220;
+  --border:   #141c2e;
+  --border-2: #1f2a42;
+
+  --cyan:     #00d4ff;
+  --cyan-2:   #00ffe5;
+  --cyan-dim: #0088aa;
+  --red:      #ff1a44;
+  --orange:   #ff6500;
+  --yellow:   #ffc800;
+  --green:    #00c897;
+  --purple:   #9b6dff;
+
+  --text-1:   #e8edf5;
+  --text-2:   #8a9ab8;
+  --text-3:   #4a5a78;
+
+  --font-ui:   'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
+  --font-head: 'Rajdhani', sans-serif;
+
+  --radius:    8px;
+  --radius-lg: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  background: #000000;
+  color: var(--text-1);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+/* Subtle cyan glow at top of app */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 260px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 10px;
+  padding: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.right-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-1);
+  gap: 12px;
+}
+
+.card-title {
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Header / Stats bar ────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  height: 52px;
+  background: var(--bg-0);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.logo {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+}
+
+.logo-hex {
+  font-size: 20px;
+  animation: logo-breathe 3s ease-in-out infinite;
+}
+
+@keyframes logo-breathe {
+  0%, 100% { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+  50%      { text-shadow: 0 0 20px rgba(0, 212, 255, 1); }
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: status-pulse 2s ease-in-out infinite;
+}
+.status-dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); animation: none; }
+.status-dot.connecting { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+}
+
+.status-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+  letter-spacing: 0.08em;
+}
+
+.stats-row {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 18px;
+  border-left: 1px solid var(--border);
+  min-width: 100px;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--cyan);
+  line-height: 1.2;
+}
+
+.stat-value.red    { color: var(--red);    }
+.stat-value.orange { color: var(--orange); }
+.stat-value.green  { color: var(--green);  }
+
+/* ── Map card ──────────────────────────────────────────────────────────────── */
+.map-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.map-wrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  background: #000;
+}
+
+.map-wrap .leaflet-container {
+  width: 100%; height: 100%;
+  background: #000000;
+}
+
+.map-wrap .leaflet-container .leaflet-tile-pane {
+  filter: brightness(0.7) contrast(1.1);
+}
+
+.leaflet-control-attribution {
+  background: rgba(0,0,0,0.75) !important;
+  color: var(--text-3) !important;
+  font-size: 9px !important;
+  padding: 2px 6px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+}
+.leaflet-control-attribution a { color: var(--cyan-dim) !important; }
+
+/* Custom zoom buttons */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 12px !important;
+}
+.leaflet-control-zoom a {
+  background: rgba(0,0,0,0.85) !important;
+  color: var(--cyan) !important;
+  border: 1px solid var(--border) !important;
+  width: 30px !important; height: 30px !important;
+  line-height: 28px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  backdrop-filter: blur(8px);
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(0, 212, 255, 0.1) !important;
+  border-color: var(--cyan) !important;
+}
+
+/* Popup styling */
+.leaflet-popup-content-wrapper {
+  background: rgba(10,14,23,0.95) !important;
+  color: var(--text-1) !important;
+  border: 1px solid var(--border-2) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.8), 0 0 24px rgba(0,212,255,0.1) !important;
+  backdrop-filter: blur(12px);
+}
+.leaflet-popup-tip { background: rgba(10,14,23,0.95) !important; }
+.leaflet-popup-content { margin: 10px 14px !important; }
+
+/* ── Map overlays (floating info cards) ─────────────────────────────────── */
+.map-overlay {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--border-2);
+  padding: 10px 14px;
+  border-radius: 8px;
+  z-index: 500;
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+  min-width: 120px;
+}
+
+.map-overlay-tl { top: 14px; left: 14px; }
+.map-overlay-tr { top: 14px; right: 14px; }
+.map-overlay-bl { bottom: 14px; left: 14px; }
+.map-overlay-br { bottom: 14px; right: 14px; }
+
+.overlay-label {
+  font-size: 9px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.overlay-value {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.overlay-value.red { color: var(--red); text-shadow: 0 0 8px rgba(255, 26, 68, 0.5); }
+.overlay-value.green { color: var(--green); text-shadow: 0 0 8px rgba(0, 200, 151, 0.4); }
+
+.overlay-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-2);
+  margin-top: 3px;
+}
+
+/* ── Severity filter pills ─────────────────────────────────────────────── */
+.sev-filter {
+  display: flex;
+  gap: 6px;
+}
+
+.sev-chip {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid var(--border-2);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-ui);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.sev-chip-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sev-color, var(--cyan));
+}
+
+.sev-chip.active {
+  background: rgba(255,255,255,0.03);
+  border-color: var(--sev-color);
+  color: var(--text-1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5), inset 0 0 8px rgba(255,255,255,0.02);
+}
+
+.sev-chip:not(.active) {
+  opacity: 0.35;
+}
+
+.sev-chip:hover { opacity: 1; }
+
+/* ── Radar / Server marker ─────────────────────────────────────────────── */
+.radar-pulse {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+.radar-sweep {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(0, 200, 151, 0.35) 20deg,
+    rgba(0, 200, 151, 0.1) 45deg,
+    transparent 70deg,
+    transparent 360deg
+  );
+  animation: radar-rotate 4s linear infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes radar-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.radar-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(0, 200, 151, 0.5);
+  border-radius: 50%;
+  animation: radar-expand 3s ease-out infinite;
+}
+
+@keyframes radar-expand {
+  0%   { width: 18px;  height: 18px;  opacity: 0.9; border-color: rgba(0,200,151,0.7); }
+  100% { width: 180px; height: 180px; opacity: 0;   border-color: rgba(0,200,151,0.0); }
+}
+
+.server-core {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #00ff99;
+  box-shadow:
+    0 0 12px #00c897,
+    0 0 24px rgba(0, 200, 151, 0.6),
+    0 0 40px rgba(0, 200, 151, 0.3);
+  z-index: 2;
+}
+
+.server-label {
+  position: absolute;
+  top: calc(50% + 18px); left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--green);
+  background: rgba(0,0,0,0.7);
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(0, 200, 151, 0.3);
+}
+
+/* ── Attack pulse dots ─────────────────────────────────────────────────── */
+.pulse-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--c, #ff1a44);
+  position: relative;
+  animation: dot-lifetime 9s ease-out forwards;
+  box-shadow: 0 0 10px var(--c), 0 0 20px var(--c);
+}
+
+.pulse-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--c, #ff1a44);
+  animation: dot-ring 1.6s ease-out infinite;
+}
+
+@keyframes dot-ring {
+  0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+  100% { transform: translate(-50%,-50%) scale(5); opacity: 0; }
+}
+
+@keyframes dot-lifetime {
+  0%   { opacity: 1; }
+  60%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Animated attack arc paths */
+.arc-critical { animation: arc-flow 0.5s linear infinite; }
+.arc-high     { animation: arc-flow 0.9s linear infinite; }
+.arc-medium   { animation: arc-flow 1.3s linear infinite; }
+.arc-low      { animation: arc-flow 1.8s linear infinite; }
+
+@keyframes arc-flow {
+  to { stroke-dashoffset: -14; }
+}
+
+/* ── Alert Feed ─────────────────────────────────────────────────────────── */
+.alert-list {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.alert-list::-webkit-scrollbar { width: 4px; }
+.alert-list::-webkit-scrollbar-track { background: transparent; }
+.alert-list::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+.alert-item {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+  animation: slide-in 0.3s ease-out;
+}
+
+.alert-item:hover { background: var(--bg-2); }
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.alert-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.sev-badge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.sev-CRITICAL { background: rgba(255,26,68,0.2);  color: #ff4466; border: 1px solid rgba(255,26,68,0.3); }
+.sev-HIGH     { background: rgba(255,101,0,0.2);  color: #ff8833; border: 1px solid rgba(255,101,0,0.3); }
+.sev-MEDIUM   { background: rgba(255,200,0,0.15); color: #ffd040; border: 1px solid rgba(255,200,0,0.3); }
+.sev-LOW      { background: rgba(0,200,151,0.15); color: #00c897; border: 1px solid rgba(0,200,151,0.3); }
+
+.threat-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-1);
+  font-weight: 500;
+}
+
+.alert-time {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.alert-ips {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-2);
+  margin-bottom: 3px;
+}
+
+.alert-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.alert-geo {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.action-badge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  margin-left: auto;
+}
+
+.action-BLOCKED { background: rgba(255,26,68,0.15);  color: #ff4466; }
+.action-ALERTED { background: rgba(255,101,0,0.15);  color: #ff8833; }
+.action-LOGGED  { background: rgba(138,154,184,0.1); color: var(--text-2); }
+
+/* ── Charts ─────────────────────────────────────────────────────────────── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 10px;
+}
+
+.charts-row .card { overflow: visible; }
+
+.recharts-text { fill: var(--text-3) !important; }
+.recharts-cartesian-axis-tick-value { font-size: 10px !important; }
+
+/* ── Scrollbar global ───────────────────────────────────────────────────── */
+* { scrollbar-width: thin; scrollbar-color: var(--border-2) transparent; }

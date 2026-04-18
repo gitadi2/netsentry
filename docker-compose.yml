@@ -1,0 +1,60 @@
+version: '3.9'
+
+services:
+  # ── Node.js API + WebSocket ─────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD","curl","-f","http://localhost:3001/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ── React dashboard (served by Vite preview in prod) ─────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.frontend
+      args:
+        - VITE_API_URL=http://localhost:3001
+        - VITE_WS_URL=ws://localhost:3001
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # ── Streamlit DPI demo ───────────────────────────────────────────────────────
+  streamlit:
+    image: python:3.12-slim
+    working_dir: /app
+    volumes:
+      - ./streamlit:/app
+    ports:
+      - "8501:8501"
+    environment:
+      - NETSENTRY_API=http://api:3001
+      - NETSENTRY_DASH=http://localhost:5173
+    command: >
+      sh -c "pip install -r requirements.txt -q &&
+             streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # ── C++ engine (optional — uncomment to run the real DPI binary) ────────────
+  # cpp-engine:
+  #   build:
+  #     context: ./cpp
+  #     dockerfile: ../Dockerfile.cpp
+  #   volumes:
+  #     - ./cpp/build:/build
+  #   command: /build/netsentry --sim
+  #   restart: unless-stopped

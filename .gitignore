@@ -1,0 +1,32 @@
+# Node
+node_modules/
+npm-debug.log*
+.npm
+
+# Build outputs
+frontend/dist/
+cpp/build/
+
+# Binaries
+cpp/src/netsentry
+netsentry
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+streamlit/.streamlit/

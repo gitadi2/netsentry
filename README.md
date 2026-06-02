@@ -176,6 +176,21 @@ Once built, the Node API auto-detects the binary and pipes its JSON output inste
 
 ---
 
+## 🧪 Tests
+
+The C++ core is covered by a **31-test GoogleTest suite** spanning the Aho-Corasick matcher, Bloom filter, entropy function, and the classify rule engine.
+
+```bash
+cd cpp
+cmake -B build -DBUILD_TESTS=ON
+cmake --build build
+./build/netsentry_tests        # Windows: .\build\netsentry_tests.exe
+```
+
+GoogleTest is fetched automatically via CMake `FetchContent` — no manual install needed.
+
+---
+
 ## 📊 Benchmarks
 
 ```bash
@@ -246,7 +261,9 @@ netsentry/
 │   ├── src/
 │   │   ├── netsentry.h      ← AhoCorasick · BloomFilter · entropy · FlowTable
 │   │   └── main.cpp         ← simulator + libpcap capture + JSON stdout
-│   └── CMakeLists.txt
+│   ├── tests/
+│   │   └── test_netsentry.cpp  ← GoogleTest suite (31 tests)
+│   └── CMakeLists.txt       ← engine build + BUILD_TESTS / COVERAGE options
 ├── api/
 │   ├── server.js            ← Express + ws + REST + built-in JS simulator
 │   └── package.json
@@ -292,6 +309,7 @@ netsentry/
 | **API** | Node.js 20 · Express 4 · ws (WebSocket) |
 | **Frontend** | React 18 · Vite 5 · Leaflet · Recharts |
 | **Analyzer** | Streamlit · Plotly · NumPy |
+| **Testing** | GoogleTest (C++) · GitHub Actions CI |
 | **Infra** | Docker · docker-compose · Nginx · GitHub Actions |
 | **Deploy** | Vercel · Render · Streamlit Cloud · GitHub |
 
@@ -306,7 +324,7 @@ netsentry/
 - [x] Docker deploy for all services
 - [x] Cloud deploy (Vercel + Render + Streamlit Cloud)
 - [x] Benchmark suite + document vs Snort
-- [x] GoogleTest unit tests for C++ core (80%+ coverage)
+- [x] GoogleTest unit tests for C++ core (31 tests)
 - [ ] Jest integration tests for the API
 - [ ] Prometheus `/metrics` endpoint + Grafana dashboard
 - [ ] JWT authentication + rate limiting on the API
@@ -323,7 +341,7 @@ netsentry/
 | Streamlit shows **OFFLINE** | Check the `NETSENTRY_API` secret on Streamlit Cloud — no trailing slash, `https://` prefix |
 | Map tiles don't load | Check internet — CartoDB tiles need network |
 | WebSocket disconnects on Render | Render free tier sleeps after 15 min — upgrade to Starter ($7/mo) for always-on |
-| C++ fails to compile | Need CMake ≥ 3.16, GCC ≥ 10, and `libpcap-dev` on Linux |
+| C++ fails to compile | Need CMake ≥ 3.16, GCC ≥ 11, and `libpcap-dev` on Linux |
 | Vercel build fails | Root directory must be `frontend`, not `/frontend` |
 
 ---
@@ -334,6 +352,18 @@ netsentry/
 
 ---
 
-<p align="center">
-  <sub>Built by <a href="https://github.com/gitadi2">Aditya Satapathy</a> · Bharati Vidyapeeth University College of Engineering, Pune</sub>
+## Author
+
+**ADITYA SATAPATHY**
+
+<p>
+  <a href="https://github.com/gitadi2">
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+  </a>
+  <a href="https://www.linkedin.com/in/adisatapathy">
+    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+  </a>
+  <a href="mailto:satgriezeleo1007@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Gmail" />
+  </a>
 </p>

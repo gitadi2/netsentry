@@ -26,7 +26,7 @@
 |---|---|---|
 | **Dashboard** | [netsentry-two.vercel.app](https://netsentry-two.vercel.app/) | Live SOC — world threat map, real-time alert feed, attack charts |
 | **DPI Analyzer** | [netsentry-dpi-adi.streamlit.app](https://netsentry-dpi-adi.streamlit.app) | Paste any payload → classified with entropy analysis |
-| **API Health** | [https://netsentry-api.onrender.com/api/health](https://netsentry-api.onrender.com/api/health) | WebSocket + REST API status |
+| **API Health** | [netsentry-api.onrender.com/api/health](https://netsentry-api.onrender.com/api/health) | WebSocket + REST API status |
 
 > The Render free tier sleeps after 15 minutes of inactivity. First request after sleep takes ~30 seconds to wake up — subsequent requests are instant.
 
@@ -45,7 +45,14 @@ NetSentry inspects network packets at wire speed, classifies them with signature
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ System Design
+
+<p align="center">
+  <img src="./docs/system-design.png" alt="NetSentry system design — end-to-end data flow from network capture through the C++ DPI engine, Node.js API, to the React dashboard and Streamlit analyzer" width="100%">
+</p>
+
+<details>
+<summary>Text version of the architecture (click to expand)</summary>
 
 ```
  Network / NIC
@@ -79,6 +86,8 @@ NetSentry inspects network packets at wire speed, classifies them with signature
  │  └─ Recharts    │   │  └─ Byte freq chart  │
  └─────────────────┘   └──────────────────────┘
 ```
+
+</details>
 
 ---
 
@@ -193,16 +202,16 @@ docker compose up --build
 - Root Directory: `frontend`
 - Framework Preset: **Vite** (auto-detected)
 - Environment variables:
-  - `VITE_API_URL=https://YOUR-API.onrender.com`
-  - `VITE_WS_URL=wss://YOUR-API.onrender.com`
+  - `VITE_API_URL=https://netsentry-api.onrender.com`
+  - `VITE_WS_URL=wss://netsentry-api.onrender.com`
 
 ### 3 · Streamlit Analyzer to Streamlit Cloud
 
 - New app → repo → `streamlit/app.py`
 - Secrets:
   ```toml
-  NETSENTRY_API = "https://YOUR-API.onrender.com"
-  NETSENTRY_DASH = "https://YOUR-DASHBOARD.vercel.app"
+  NETSENTRY_API = "https://netsentry-api.onrender.com"
+  NETSENTRY_DASH = "https://netsentry-two.vercel.app"
   ```
 
 Every push to `main` auto-redeploys all three services.
@@ -234,6 +243,9 @@ netsentry/
 ├── streamlit/
 │   ├── app.py               ← DPI analyzer · entropy gauge · byte freq chart
 │   └── requirements.txt
+├── docs/
+│   ├── system-design.png    ← architecture diagram (this README)
+│   └── system-design.svg    ← vector source for slides / print
 ├── Dockerfile.api
 ├── Dockerfile.frontend
 ├── Dockerfile.cpp
@@ -298,5 +310,5 @@ netsentry/
 ---
 
 <p align="center">
-  <sub>Built by <a href="https://github.com/YOUR-USERNAME">Aditya Satapathy</a> · Bharati Vidyapeeth College of Engineering, Pune</sub>
+  <sub>Built by <a href="https://github.com/gitadi2">Aditya Satapathy</a> · Bharati Vidyapeeth University College of Engineering, Pune</sub>
 </p>

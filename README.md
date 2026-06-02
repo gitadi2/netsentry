@@ -306,7 +306,7 @@ netsentry/
 - [x] Docker deploy for all services
 - [x] Cloud deploy (Vercel + Render + Streamlit Cloud)
 - [x] Benchmark suite + document vs Snort
-- [ ] GoogleTest unit tests for C++ core (80%+ coverage)
+- [x] GoogleTest unit tests for C++ core (80%+ coverage)
 - [ ] Jest integration tests for the API
 - [ ] Prometheus `/metrics` endpoint + Grafana dashboard
 - [ ] JWT authentication + rate limiting on the API

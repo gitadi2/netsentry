@@ -14,6 +14,7 @@
 #include <iostream>
 #include <random>
 #include <thread>
+#include <iomanip>
 
 #ifdef HAVE_PCAP
 #include <pcap.h>

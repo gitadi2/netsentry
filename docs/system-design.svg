@@ -1,0 +1,239 @@
+<svg width="1400" height="1000" viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', 'Inter', system-ui, sans-serif">
+  <defs>
+    <!-- gradients -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#04060a"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="0%" r="80%">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.08"/>
+      <stop offset="60%" stop-color="#00d4ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cppGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="100%" stop-color="#06101f"/>
+    </linearGradient>
+
+    <!-- arrow markers -->
+    <marker id="arrCyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#00d4ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrGray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#3a4a68" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#30d158" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect width="1400" height="1000" fill="url(#bgGrad)"/>
+  <rect width="1400" height="400" fill="url(#glow)"/>
+
+  <!-- ===== TITLE ===== -->
+  <text x="60" y="58" font-size="30" font-weight="700" fill="#ffffff" letter-spacing="1">
+    <tspan fill="#00d4ff">⬡</tspan> NetSentry — System Design
+  </text>
+  <text x="60" y="84" font-size="14" fill="#8a9ab8" letter-spacing="0.5">Real-Time Deep Packet Inspection &amp; Intrusion Detection · End-to-end data flow</text>
+  <line x1="60" y1="100" x2="1340" y2="100" stroke="#141c2e" stroke-width="1"/>
+
+  <!-- ===== LAYER LABELS (left rail) ===== -->
+  <g font-size="11" font-weight="600" letter-spacing="1.5" fill="#4a5a78">
+    <text x="60" y="165" transform="rotate(-90 60 165)" text-anchor="middle">INGEST</text>
+    <text x="60" y="340" transform="rotate(-90 60 340)" text-anchor="middle">PROCESS · C++</text>
+    <text x="60" y="585" transform="rotate(-90 60 585)" text-anchor="middle">SERVE · NODE.JS</text>
+    <text x="60" y="800" transform="rotate(-90 60 800)" text-anchor="middle">PRESENT</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- LAYER 1 — INGEST                                             -->
+  <!-- ============================================================ -->
+  <g>
+    <!-- NIC -->
+    <rect x="110" y="130" width="200" height="70" rx="10" fill="#0d1424" stroke="#243552" stroke-width="1"/>
+    <text x="210" y="160" text-anchor="middle" font-size="15" font-weight="600" fill="#e8edf5">Network Interface</text>
+    <text x="210" y="180" text-anchor="middle" font-size="11" fill="#8a9ab8">live traffic · NIC / tap</text>
+
+    <!-- capture -->
+    <rect x="370" y="130" width="220" height="70" rx="10" fill="#0d1424" stroke="#243552" stroke-width="1"/>
+    <text x="480" y="155" text-anchor="middle" font-size="15" font-weight="600" fill="#e8edf5">Capture Layer</text>
+    <text x="480" y="174" text-anchor="middle" font-size="11" fill="#00d4ff" font-family="monospace">AF_XDP · libpcap</text>
+    <text x="480" y="190" text-anchor="middle" font-size="10" fill="#4a5a78">zero-copy UMEM ring</text>
+
+    <!-- SPSC ring -->
+    <rect x="650" y="130" width="220" height="70" rx="10" fill="#0d1424" stroke="#243552" stroke-width="1"/>
+    <text x="760" y="155" text-anchor="middle" font-size="15" font-weight="600" fill="#e8edf5">Lock-free SPSC Ring</text>
+    <text x="760" y="174" text-anchor="middle" font-size="11" fill="#97c459" font-family="monospace">O(1) wait-free</text>
+    <text x="760" y="190" text-anchor="middle" font-size="10" fill="#4a5a78">cache-line aligned head/tail</text>
+
+    <!-- dispatcher -->
+    <rect x="930" y="130" width="220" height="70" rx="10" fill="#0d1424" stroke="#243552" stroke-width="1"/>
+    <text x="1040" y="155" text-anchor="middle" font-size="15" font-weight="600" fill="#e8edf5">5-Tuple Dispatcher</text>
+    <text x="1040" y="174" text-anchor="middle" font-size="11" fill="#97c459" font-family="monospace">FNV-1a hash</text>
+    <text x="1040" y="190" text-anchor="middle" font-size="10" fill="#4a5a78">shard → worker thread</text>
+
+    <!-- arrows -->
+    <line x1="310" y1="165" x2="368" y2="165" stroke="#3a4a68" stroke-width="1.5" marker-end="url(#arrGray)"/>
+    <line x1="590" y1="165" x2="648" y2="165" stroke="#3a4a68" stroke-width="1.5" marker-end="url(#arrGray)"/>
+    <line x1="870" y1="165" x2="928" y2="165" stroke="#3a4a68" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- LAYER 2 — C++ DPI ENGINE (big container)                    -->
+  <!-- ============================================================ -->
+  <rect x="110" y="240" width="1230" height="200" rx="14" fill="url(#cppGrad)" stroke="#1a3050" stroke-width="1.5"/>
+  <text x="132" y="268" font-size="14" font-weight="700" fill="#00d4ff" letter-spacing="0.5">C++ DPI ENGINE — multithreaded worker pool</text>
+  <text x="132" y="286" font-size="11" fill="#4a5a78">each worker pinned to a CPU core · owns its own flow table · zero cross-thread locks</text>
+
+  <!-- worker components -->
+  <g>
+    <!-- Aho-Corasick -->
+    <rect x="135" y="305" width="225" height="115" rx="10" fill="#0a1220" stroke="#243552" stroke-width="1"/>
+    <circle cx="160" cy="332" r="6" fill="#00d4ff"/>
+    <text x="178" y="337" font-size="14" font-weight="600" fill="#e8edf5">Aho-Corasick</text>
+    <text x="150" y="362" font-size="11" fill="#8a9ab8">Multi-pattern matcher.</text>
+    <text x="150" y="380" font-size="11" fill="#8a9ab8">Matches Snort signatures</text>
+    <text x="150" y="398" font-size="11" fill="#8a9ab8">in one pass over payload.</text>
+    <text x="150" y="414" font-size="11" fill="#97c459" font-family="monospace">O(n+m)</text>
+
+    <!-- Trie -->
+    <rect x="375" y="305" width="225" height="115" rx="10" fill="#0a1220" stroke="#243552" stroke-width="1"/>
+    <circle cx="400" cy="332" r="6" fill="#30d158"/>
+    <text x="418" y="337" font-size="14" font-weight="600" fill="#e8edf5">Protocol Trie</text>
+    <text x="390" y="362" font-size="11" fill="#8a9ab8">L4–L7 protocol parser.</text>
+    <text x="390" y="380" font-size="11" fill="#8a9ab8">Prefix walk over header</text>
+    <text x="390" y="398" font-size="11" fill="#8a9ab8">bytes → app protocol.</text>
+    <text x="390" y="414" font-size="11" fill="#97c459" font-family="monospace">O(k)</text>
+
+    <!-- Entropy -->
+    <rect x="615" y="305" width="225" height="115" rx="10" fill="#0a1220" stroke="#243552" stroke-width="1"/>
+    <circle cx="640" cy="332" r="6" fill="#9b6dff"/>
+    <text x="658" y="337" font-size="14" font-weight="600" fill="#e8edf5">Entropy Scorer</text>
+    <text x="630" y="362" font-size="11" fill="#8a9ab8">Shannon H(X) over</text>
+    <text x="630" y="380" font-size="11" fill="#8a9ab8">128-byte windows.</text>
+    <text x="630" y="398" font-size="11" fill="#8a9ab8">Flags encrypted C2.</text>
+    <text x="630" y="414" font-size="11" fill="#c08bff" font-family="monospace">→ MATLAB db4</text>
+
+    <!-- Bloom -->
+    <rect x="855" y="305" width="225" height="115" rx="10" fill="#0a1220" stroke="#243552" stroke-width="1"/>
+    <circle cx="880" cy="332" r="6" fill="#ffc800"/>
+    <text x="898" y="337" font-size="14" font-weight="600" fill="#e8edf5">Bloom Filter</text>
+    <text x="870" y="362" font-size="11" fill="#8a9ab8">IP reputation pre-filter.</text>
+    <text x="870" y="380" font-size="11" fill="#8a9ab8">4 MB · 7 hashes.</text>
+    <text x="870" y="398" font-size="11" fill="#8a9ab8">Rejects benign in ~5 ns.</text>
+    <text x="870" y="414" font-size="11" fill="#97c459" font-family="monospace">FP &lt; 0.1%</text>
+
+    <!-- Rule engine (decision) -->
+    <rect x="1095" y="305" width="225" height="115" rx="10" fill="#1a0c12" stroke="#5a2030" stroke-width="1.2"/>
+    <circle cx="1120" cy="332" r="6" fill="#ff1a44"/>
+    <text x="1138" y="337" font-size="14" font-weight="600" fill="#e8edf5">Rule Engine</text>
+    <text x="1110" y="362" font-size="11" fill="#8a9ab8">Scores matched flow →</text>
+    <text x="1110" y="382" font-size="12" fill="#ff4466" font-weight="600" font-family="monospace">BLOCK</text>
+    <text x="1175" y="382" font-size="12" fill="#ff8833" font-weight="600" font-family="monospace">ALERT</text>
+    <text x="1110" y="402" font-size="12" fill="#8a9ab8" font-weight="600" font-family="monospace">LOG</text>
+    <text x="1160" y="402" font-size="12" fill="#30d158" font-weight="600" font-family="monospace">PASS</text>
+  </g>
+
+  <!-- arrow ingest → engine -->
+  <line x1="760" y1="200" x2="760" y2="238" stroke="#3a4a68" stroke-width="1.5" marker-end="url(#arrGray)"/>
+
+  <!-- internal flow arrows in engine -->
+  <g stroke="#243552" stroke-width="1.3">
+    <line x1="360" y1="362" x2="373" y2="362" marker-end="url(#arrGray)"/>
+    <line x1="600" y1="362" x2="613" y2="362" marker-end="url(#arrGray)"/>
+    <line x1="840" y1="362" x2="853" y2="362" marker-end="url(#arrGray)"/>
+    <line x1="1080" y1="362" x2="1093" y2="362" marker-end="url(#arrGray)"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- MATLAB sidecar (research callout)                           -->
+  <!-- ============================================================ -->
+  <rect x="615" y="462" width="225" height="74" rx="10" fill="#120a1f" stroke="#3a2860" stroke-width="1.2"/>
+  <text x="727" y="487" text-anchor="middle" font-size="13" font-weight="600" fill="#c08bff">MATLAB Engine (sidecar)</text>
+  <text x="727" y="506" text-anchor="middle" font-size="11" fill="#8a9ab8" font-family="monospace">wavedec(H, 4, "db4")</text>
+  <text x="727" y="523" text-anchor="middle" font-size="10" fill="#4a5a78">4-level DWT · periodic C2 beacon detection</text>
+  <line x1="727" y1="420" x2="727" y2="460" stroke="#3a2860" stroke-width="1.5" marker-end="url(#arrGray)" stroke-dasharray="4 3"/>
+  <text x="745" y="445" font-size="10" fill="#6a5a98" font-style="italic">entropy series</text>
+
+  <!-- ============================================================ -->
+  <!-- LAYER 3 — NODE.JS API                                       -->
+  <!-- ============================================================ -->
+  <rect x="110" y="560" width="1230" height="130" rx="14" fill="#08120f" stroke="#10402e" stroke-width="1.5"/>
+  <text x="132" y="588" font-size="14" font-weight="700" fill="#30d158" letter-spacing="0.5">NODE.JS API · Express + ws · port 3001</text>
+
+  <!-- WS server -->
+  <rect x="135" y="605" width="270" height="68" rx="10" fill="#0a1612" stroke="#1a4a36" stroke-width="1"/>
+  <text x="270" y="632" text-anchor="middle" font-size="13" font-weight="600" fill="#e8edf5">WebSocket Server</text>
+  <text x="270" y="652" text-anchor="middle" font-size="11" fill="#8a9ab8">fan-out alerts to all clients · &lt;5 ms</text>
+
+  <!-- REST -->
+  <rect x="425" y="605" width="270" height="68" rx="10" fill="#0a1612" stroke="#1a4a36" stroke-width="1"/>
+  <text x="560" y="628" text-anchor="middle" font-size="13" font-weight="600" fill="#e8edf5">REST API</text>
+  <text x="560" y="648" text-anchor="middle" font-size="10" fill="#8a9ab8" font-family="monospace">GET /alerts /stats · POST /classify</text>
+
+  <!-- store -->
+  <rect x="715" y="605" width="270" height="68" rx="10" fill="#0a1612" stroke="#1a4a36" stroke-width="1"/>
+  <text x="850" y="632" text-anchor="middle" font-size="13" font-weight="600" fill="#e8edf5">Alert Store</text>
+  <text x="850" y="652" text-anchor="middle" font-size="11" fill="#8a9ab8">in-memory ring buffer · last 1000</text>
+
+  <!-- simulator -->
+  <rect x="1005" y="605" width="315" height="68" rx="10" fill="#0a1612" stroke="#1a4a36" stroke-width="1"/>
+  <text x="1162" y="632" text-anchor="middle" font-size="13" font-weight="600" fill="#e8edf5">Engine Bridge / JS Simulator</text>
+  <text x="1162" y="652" text-anchor="middle" font-size="10" fill="#8a9ab8">reads C++ stdout · falls back to synthetic traffic</text>
+
+  <!-- arrow engine → api -->
+  <line x1="1207" y1="420" x2="1207" y2="603" stroke="#3a4a68" stroke-width="1.5" marker-end="url(#arrGray)"/>
+  <text x="1225" y="500" font-size="10" fill="#5a6a88" font-style="italic">JSON lines</text>
+
+  <!-- ============================================================ -->
+  <!-- LAYER 4 — PRESENT                                           -->
+  <!-- ============================================================ -->
+  <!-- React dashboard -->
+  <rect x="200" y="745" width="430" height="115" rx="12" fill="#0c0a1a" stroke="#2a2450" stroke-width="1.3"/>
+  <text x="222" y="773" font-size="14" font-weight="700" fill="#9b6dff" letter-spacing="0.5">REACT DASHBOARD · Vercel</text>
+  <text x="222" y="800" font-size="11" fill="#8a9ab8">• Leaflet world threat map · animated attack arcs</text>
+  <text x="222" y="820" font-size="11" fill="#8a9ab8">• Live alert feed · severity filter · radar sweep</text>
+  <text x="222" y="840" font-size="11" fill="#8a9ab8">• Recharts — alerts/sec timeline · threat donut</text>
+
+  <!-- Streamlit -->
+  <rect x="770" y="745" width="430" height="115" rx="12" fill="#1a0c0c" stroke="#5a2424" stroke-width="1.3"/>
+  <text x="792" y="773" font-size="14" font-weight="700" fill="#ff4b4b" letter-spacing="0.5">STREAMLIT ANALYZER · Streamlit Cloud</text>
+  <text x="792" y="800" font-size="11" fill="#8a9ab8">• Paste payload → live DPI classification</text>
+  <text x="792" y="820" font-size="11" fill="#8a9ab8">• Shannon entropy gauge · byte-freq histogram</text>
+  <text x="792" y="840" font-size="11" fill="#8a9ab8">• Sliding-window H(X) — wavelet input preview</text>
+
+  <!-- arrows api → present -->
+  <path d="M270 673 L270 710 L415 710 L415 743" fill="none" stroke="#00d4ff" stroke-width="1.6" marker-end="url(#arrCyan)"/>
+  <text x="300" y="703" font-size="10" fill="#00d4ff" font-style="italic">WebSocket</text>
+
+  <path d="M560 673 L560 710 L985 710 L985 743" fill="none" stroke="#00d4ff" stroke-width="1.6" marker-end="url(#arrCyan)"/>
+  <text x="700" y="703" font-size="10" fill="#00d4ff" font-style="italic">REST /classify</text>
+
+  <!-- streamlit pushes back to store -->
+  <path d="M985 760 L1255 760 L1255 690 L850 690 L850 675" fill="none" stroke="#30d158" stroke-width="1.4" marker-end="url(#arrGreen)" stroke-dasharray="5 4"/>
+  <text x="1060" y="752" font-size="10" fill="#30d158" font-style="italic">classified threat re-injected → dashboard</text>
+
+  <!-- ============================================================ -->
+  <!-- DEPLOYMENT FOOTER                                           -->
+  <!-- ============================================================ -->
+  <line x1="60" y1="895" x2="1340" y2="895" stroke="#141c2e" stroke-width="1"/>
+  <text x="60" y="925" font-size="12" font-weight="600" fill="#4a5a78" letter-spacing="1">DEPLOYMENT</text>
+  <g font-size="12" fill="#8a9ab8">
+    <rect x="180" y="910" width="150" height="32" rx="8" fill="#0d1424" stroke="#243552"/>
+    <text x="255" y="931" text-anchor="middle" fill="#e8edf5">Render · API</text>
+
+    <rect x="350" y="910" width="190" height="32" rx="8" fill="#0d1424" stroke="#243552"/>
+    <text x="445" y="931" text-anchor="middle" fill="#e8edf5">Vercel · Dashboard</text>
+
+    <rect x="560" y="910" width="210" height="32" rx="8" fill="#0d1424" stroke="#243552"/>
+    <text x="665" y="931" text-anchor="middle" fill="#e8edf5">Streamlit Cloud · Analyzer</text>
+
+    <rect x="790" y="910" width="170" height="32" rx="8" fill="#0d1424" stroke="#243552"/>
+    <text x="875" y="931" text-anchor="middle" fill="#e8edf5">Docker · compose</text>
+
+    <rect x="980" y="910" width="160" height="32" rx="8" fill="#0d1424" stroke="#243552"/>
+    <text x="1060" y="931" text-anchor="middle" fill="#e8edf5">GitHub · CI/CD</text>
+  </g>
+
+  <text x="1340" y="975" text-anchor="end" font-size="11" fill="#2a3548">NetSentry · DPI Architecture · github.com/gitadi2/netsentry</text>
+</svg>

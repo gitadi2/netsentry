@@ -3,6 +3,7 @@
 > **Real-Time Network Intrusion Detection System** — a production-grade Deep Packet Inspection pipeline in C++, a live SOC dashboard in React, and a Streamlit DPI analyzer — all deployed.
 
 <p align="center">
+  <a href="https://github.com/gitadi2/netsentry/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/gitadi2/netsentry/actions/workflows/ci.yml/badge.svg"></a>
   <a href="https://netsentry-two.vercel.app"><img alt="Dashboard" src="https://img.shields.io/badge/live-dashboard-00d4ff?style=for-the-badge&logo=vercel&logoColor=white"></a>
   <a href="https://netsentry-dpi-adi.streamlit.app"><img alt="Analyzer" src="https://img.shields.io/badge/live-DPI%20analyzer-ff4b4b?style=for-the-badge&logo=streamlit&logoColor=white"></a>
   <a href="https://netsentry-api.onrender.com/api/health"><img alt="API" src="https://img.shields.io/badge/API-online-30d158?style=for-the-badge&logo=render&logoColor=white"></a>
@@ -114,7 +115,9 @@ Traditional signature-based DPI (Snort, Suricata) is blind to encrypted command-
 4. Unlike FFT, the DWT handles **non-stationary** signals — catches beacons that vary timing
 
 **Result:** Detects Cobalt Strike, Sliver, and custom encrypted C2 implants that bypass signature-based tools. Validated against Stratosphere IPS datasets.
-See [BENCHMARKS.md](./BENCHMARKS.md) for detection accuracy, latency percentiles, and the Snort comparison.
+
+📊 See [**BENCHMARKS.md**](./BENCHMARKS.md) for detection accuracy, latency percentiles, and the full Snort comparison.
+
 ---
 
 ## 🚀 Quick Start (local, 3 commands)
@@ -174,6 +177,21 @@ Once built, the Node API auto-detects the binary and pipes its JSON output inste
 
 ---
 
+## 📊 Benchmarks
+
+```bash
+# Start the API locally, then in another terminal:
+pip install aiohttp numpy matplotlib requests
+
+python benchmark/detection_test.py    # detection accuracy vs Snort
+python benchmark/load_test.py          # latency / throughput percentiles
+python benchmark/plot_latency.py       # render the latency chart
+```
+
+Full results, methodology, and the Snort comparison are in [BENCHMARKS.md](./BENCHMARKS.md).
+
+---
+
 ## 🐳 Docker Deploy (one command)
 
 ```bash
@@ -222,6 +240,9 @@ Every push to `main` auto-redeploys all three services.
 
 ```
 netsentry/
+├── .github/
+│   └── workflows/
+│       └── ci.yml           ← GitHub Actions — build, lint, health check
 ├── cpp/
 │   ├── src/
 │   │   ├── netsentry.h      ← AhoCorasick · BloomFilter · entropy · FlowTable
@@ -243,14 +264,20 @@ netsentry/
 ├── streamlit/
 │   ├── app.py               ← DPI analyzer · entropy gauge · byte freq chart
 │   └── requirements.txt
+├── benchmark/
+│   ├── detection_test.py    ← accuracy harness vs Snort baseline
+│   ├── load_test.py         ← latency / throughput harness
+│   └── plot_latency.py      ← renders the latency percentile chart
 ├── docs/
 │   ├── system-design.png    ← architecture diagram (this README)
-│   └── system-design.svg    ← vector source for slides / print
+│   ├── system-design.svg    ← vector source for slides / print
+│   └── latency-percentiles.png
 ├── Dockerfile.api
 ├── Dockerfile.frontend
 ├── Dockerfile.cpp
 ├── docker-compose.yml
 ├── start.sh                 ← one-command dev launcher
+├── BENCHMARKS.md
 └── README.md
 ```
 
@@ -266,7 +293,7 @@ netsentry/
 | **API** | Node.js 20 · Express 4 · ws (WebSocket) |
 | **Frontend** | React 18 · Vite 5 · Leaflet · Recharts |
 | **Analyzer** | Streamlit · Plotly · NumPy |
-| **Infra** | Docker · docker-compose · Nginx |
+| **Infra** | Docker · docker-compose · Nginx · GitHub Actions |
 | **Deploy** | Vercel · Render · Streamlit Cloud · GitHub |
 
 ---
@@ -279,13 +306,13 @@ netsentry/
 - [x] Streamlit DPI analyzer with entropy gauge
 - [x] Docker deploy for all services
 - [x] Cloud deploy (Vercel + Render + Streamlit Cloud)
+- [x] GitHub Actions CI workflow
+- [x] Benchmark suite + document vs Snort
 - [ ] GoogleTest unit tests for C++ core (80%+ coverage)
 - [ ] Jest integration tests for the API
-- [ ] GitHub Actions CI workflow
 - [ ] Prometheus `/metrics` endpoint + Grafana dashboard
 - [ ] JWT authentication + rate limiting on the API
 - [ ] Kubernetes manifests (Deployment, Service, HPA)
-- [ ] Benchmark document vs Snort / Suricata
 - [ ] Real AF_XDP integration (currently libpcap fallback)
 
 ---

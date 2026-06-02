@@ -33,3 +33,6 @@ streamlit/.streamlit/
 
 # Benchmark generated output
 benchmark/results/
+
+# Research generated output
+research/results/

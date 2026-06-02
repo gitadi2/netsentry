@@ -114,7 +114,7 @@ Traditional signature-based DPI (Snort, Suricata) is blind to encrypted command-
 4. Unlike FFT, the DWT handles **non-stationary** signals — catches beacons that vary timing
 
 **Result:** Detects Cobalt Strike, Sliver, and custom encrypted C2 implants that bypass signature-based tools. Validated against Stratosphere IPS datasets.
-
+See [BENCHMARKS.md](./BENCHMARKS.md) for detection accuracy, latency percentiles, and the Snort comparison.
 ---
 
 ## 🚀 Quick Start (local, 3 commands)

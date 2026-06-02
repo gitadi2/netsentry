@@ -30,3 +30,6 @@ __pycache__/
 *.pyc
 .venv/
 streamlit/.streamlit/
+
+# Benchmark generated output
+benchmark/results/

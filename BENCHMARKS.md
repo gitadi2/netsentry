@@ -68,19 +68,82 @@ Concurrent `POST /api/classify` requests at increasing offered load. Latency is 
 
 ## Research Result — Encrypted C2 Detection
 
-The core contribution. Signature-based DPI cannot inspect encrypted payloads. NetSentry detects encrypted C2 beaconing through a two-stage statistical method:
+## Encrypted C2 Beacon Detection — Validated Method
 
-1. **Shannon entropy** `H(X) = −Σ p(x) log₂ p(x)` over 128-byte payload windows. Encrypted/compressed data scores ≈ 7.8–8.0 bits; plaintext ≈ 4–5 bits.
-2. **db4 wavelet decomposition** `wavedec(H, 4, "db4")` on the per-flow entropy time-series. Level-1/2 detail coefficients expose *periodic* high-entropy spikes — the beacon's call-home interval — which a plain FFT misses because the signal is non-stationary.
+This is NetSentry's core research contribution: detecting encrypted command-and-control
+beaconing **without decryption**, by combining payload entropy with inter-arrival
+timing regularity. The full harness lives in [`research/`](../research) and is
+reproducible end-to-end.
 
-| Traffic type | Mean entropy (bits) | Snort verdict | NetSentry verdict |
-|---|---|---|---|
-| Plaintext HTTP | 4.6 | pass | pass |
-| Base64 payload | 6.0 | pass | flag (elevated) |
-| TLS-wrapped browsing | 7.9 | pass | pass (aperiodic) |
-| **Encrypted C2 beacon** | **7.9** | **pass (missed)** | **flag (periodic spikes)** |
+### The insight
 
-The distinction between normal TLS and a C2 beacon is **periodicity**, not entropy alone — both look random. The wavelet layer is what separates them.
+Signature-based IDS (Snort, Suricata) is blind to encrypted C2 — there is no
+plaintext signature to match. But entropy alone is not enough either: benign TLS
+browsing is *also* high-entropy. The discriminator is **timing**.
+
+![C2 beacon vs benign — timing regularity](./docs/c2-detection.png)
+
+A C2 implant beacons on a near-constant interval — its inter-arrival times have a
+low coefficient of variation (CV ≈ 0.05). Benign encrypted browsing is bursty
+(CV ≈ 0.95). NetSentry flags a flow as C2 only when **both** conditions hold:
+
+```
+mean payload entropy ≥ 6.5 bits      (encrypted/compressed)
+AND  IAT regularity = 1 − CV ≥ 0.55  (beacon cadence)
+```
+
+The per-flow entropy series is decomposed with a 4-level db4 wavelet
+(`wavedec(H, 4, "db4")`); detail-band energy provides a secondary non-stationary
+periodicity signal that FFT misses.
+
+### Algorithm validation (synthetic)
+
+The detector is first validated on 55 synthetic labeled flows — C2 beacons, benign
+TLS browsing, plaintext HTTP, and a periodic-plaintext distractor designed to fool
+naïve detectors. Reproduce with `python research/selftest.py`:
+
+| Metric | Synthetic result |
+|---|---|
+| Detection rate | 100.0% |
+| False-positive rate | 0.0% |
+| Precision | 100.0% |
+| F1 score | 100.0% |
+
+Critically, it correctly **rejects** the two hard cases: encrypted-but-bursty TLS
+(high entropy, no cadence) and periodic-but-plaintext polling (cadence, low entropy).
+This proves the logic is sound — neither signal alone is sufficient.
+
+> The synthetic result validates the *algorithm*. Real-world numbers come from
+> running the harness on labeled captures (below) — run it before quoting figures.
+
+### Real-data experiment (reproducible)
+
+```bash
+cd research
+pip install -r requirements.txt
+
+# 1. validate the algorithm
+python selftest.py
+
+# 2. run on real Stratosphere IPS captures
+python run_pcap.py --pcap malware-capture.pcap --label c2
+python run_pcap.py --pcap normal-capture.pcap  --label benign
+
+# 3. results → research/results/c2_detection.json
+```
+
+Datasets: [Stratosphere IPS](https://www.stratosphereips.org/datasets-overview)
+(real malware C2 captures) and [CIC-IDS2017](https://www.unb.ca/cic/datasets/ids-2017.html).
+The same captures are run through Snort 3 (community ruleset) for the baseline
+comparison; the headline result is the set of encrypted C2 flows Snort misses that
+the entropy + timing method catches.
+
+### Why this matters
+
+Entropy-only detection produces false positives on every TLS connection. Timing-only
+detection flags every polling client. The contribution here is that the **conjunction**
+— high entropy AND regular cadence — isolates encrypted beaconing specifically, a
+class of traffic signature IDS cannot see at all.
 
 ---
 

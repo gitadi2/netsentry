@@ -306,7 +306,6 @@ netsentry/
 - [x] Streamlit DPI analyzer with entropy gauge
 - [x] Docker deploy for all services
 - [x] Cloud deploy (Vercel + Render + Streamlit Cloud)
-- [x] GitHub Actions CI workflow
 - [x] Benchmark suite + document vs Snort
 - [ ] GoogleTest unit tests for C++ core (80%+ coverage)
 - [ ] Jest integration tests for the API

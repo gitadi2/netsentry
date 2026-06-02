@@ -117,6 +117,8 @@ Traditional signature-based DPI (Snort, Suricata) is blind to encrypted command-
 
 📊 See [**BENCHMARKS.md**](./BENCHMARKS.md) for detection accuracy, latency percentiles, and the full Snort comparison.
 
+🔬 The full reproducible experiment harness lives in [`research/`](./research) — run `python research/selftest.py` to validate the detector, then point it at real Stratosphere captures.
+
 ---
 
 ## 🚀 Quick Start (local, 3 commands)

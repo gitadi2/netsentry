@@ -3,7 +3,6 @@
 > **Real-Time Network Intrusion Detection System** — a production-grade Deep Packet Inspection pipeline in C++, a live SOC dashboard in React, and a Streamlit DPI analyzer — all deployed.
 
 <p align="center">
-  <a href="https://github.com/gitadi2/netsentry/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/gitadi2/netsentry/actions/workflows/ci.yml/badge.svg"></a>
   <a href="https://netsentry-two.vercel.app"><img alt="Dashboard" src="https://img.shields.io/badge/live-dashboard-00d4ff?style=for-the-badge&logo=vercel&logoColor=white"></a>
   <a href="https://netsentry-dpi-adi.streamlit.app"><img alt="Analyzer" src="https://img.shields.io/badge/live-DPI%20analyzer-ff4b4b?style=for-the-badge&logo=streamlit&logoColor=white"></a>
   <a href="https://netsentry-api.onrender.com/api/health"><img alt="API" src="https://img.shields.io/badge/API-online-30d158?style=for-the-badge&logo=render&logoColor=white"></a>

@@ -111,13 +111,13 @@ Traditional signature-based DPI (Snort, Suricata) is blind to encrypted command-
 1. Shannon entropy `H(X) = −Σ p(x) log₂(p(x))` computed over 128-byte payload windows per flow
 2. The resulting entropy time-series is passed to MATLAB `wavedec(H, 4, "db4")` — a 4-level Daubechies-4 Discrete Wavelet Transform
 3. Level-1 and level-2 detail coefficients reveal **periodic high-entropy spikes** — the signature of C2 beaconing
-4. Unlike FFT, the DWT handles **non-stationary** signals — catches beacons that vary timing
+4. The discriminator is **timing regularity**, not entropy alone — benign TLS is also high-entropy, but only a beacon calls home on a regular cadence (low coefficient of variation)
 
-**Result:** Detects Cobalt Strike, Sliver, and custom encrypted C2 implants that bypass signature-based tools. Validated against Stratosphere IPS datasets.
+**Method:** A flow is flagged as C2 only when it is *both* encrypted (mean entropy ≥ 6.5 bits) *and* periodic (inter-arrival regularity ≥ 0.55). This catches Cobalt Strike / Sliver-style beacons that bypass signature-based tools.
 
 📊 See [**BENCHMARKS.md**](./BENCHMARKS.md) for detection accuracy, latency percentiles, and the full Snort comparison.
 
-🔬 The full reproducible experiment harness lives in [`research/`](./research) — run `python research/selftest.py` to validate the detector, then point it at real Stratosphere captures.
+🔬 The full reproducible experiment harness lives in [`research/`](./research) — run `python research/selftest.py` to validate the detector, then point it at real [Stratosphere IPS](https://www.stratosphereips.org/datasets-overview) captures.
 
 ---
 
@@ -286,10 +286,18 @@ netsentry/
 │   ├── detection_test.py    ← accuracy harness vs Snort baseline
 │   ├── load_test.py         ← latency / throughput harness
 │   └── plot_latency.py      ← renders the latency percentile chart
+├── research/
+│   ├── c2_detect.py         ← entropy + db4 wavelet + IAT-regularity classifier
+│   ├── selftest.py          ← synthetic labeled flows → validates the detector
+│   ├── run_pcap.py          ← runs detection on real pcaps (Stratosphere IPS)
+│   ├── plot_c2.py           ← renders the beacon-vs-benign figure
+│   ├── requirements.txt     ← scapy · numpy · scipy · matplotlib · PyWavelets
+│   └── README.md            ← full reproducible experiment workflow
 ├── docs/
 │   ├── system-design.png    ← architecture diagram (this README)
 │   ├── system-design.svg    ← vector source for slides / print
-│   └── latency-percentiles.png
+│   ├── latency-percentiles.png
+│   └── c2-detection.png     ← C2 beacon vs benign timing comparison
 ├── Dockerfile.api
 ├── Dockerfile.frontend
 ├── Dockerfile.cpp
@@ -311,6 +319,7 @@ netsentry/
 | **API** | Node.js 20 · Express 4 · ws (WebSocket) |
 | **Frontend** | React 18 · Vite 5 · Leaflet · Recharts |
 | **Analyzer** | Streamlit · Plotly · NumPy |
+| **Research** | Python · SciPy · PyWavelets · scapy |
 | **Testing** | GoogleTest (C++) · GitHub Actions CI |
 | **Infra** | Docker · docker-compose · Nginx · GitHub Actions |
 | **Deploy** | Vercel · Render · Streamlit Cloud · GitHub |
@@ -327,6 +336,7 @@ netsentry/
 - [x] Cloud deploy (Vercel + Render + Streamlit Cloud)
 - [x] Benchmark suite + document vs Snort
 - [x] GoogleTest unit tests for C++ core (31 tests)
+- [x] C2 detection research harness (entropy + wavelet + IAT regularity)
 - [ ] Jest integration tests for the API
 - [ ] Prometheus `/metrics` endpoint + Grafana dashboard
 - [ ] JWT authentication + rate limiting on the API
